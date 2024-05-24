@@ -40,7 +40,6 @@ let
         echo "-F${Foundation}/Library/Frameworks" >> $out/nix-support/cc-cflags
         echo "-F${SystemConfiguration}/Library/Frameworks" >> $out/nix-support/cc-cflags
         echo "-L${pkgs.llvmPackages.libcxx}/lib" >> $out/nix-support/cc-cflags
-        echo "-L${pkgs.llvmPackages.libcxxabi}/lib" >> $out/nix-support/cc-cflags
         echo "-L${pkgs.libiconv}/lib" >> $out/nix-support/cc-cflags
         echo "-L${pkgs.darwin.libobjc}/lib" >> $out/nix-support/cc-cflags
         echo "-resource-dir=${pkgs.stdenv.cc}/resource-root" >> $out/nix-support/cc-cflags
@@ -204,7 +203,6 @@ pkgs.runCommand "bazel-${cc.orignalName or cc.name}-toolchain"
     )
     LINK_FLAGS=(
       $(
-        if [[ -x ${cc}/bin/ld.gold ]]; then echo -fuse-ld=gold; fi
         add_linker_option_if_supported -Wl,-no-as-needed -no-as-needed
         add_linker_option_if_supported -Wl,-z,relro,-z,now -z
       )
@@ -293,7 +291,7 @@ pkgs.runCommand "bazel-${cc.orignalName or cc.name}-toolchain"
     )
     SUPPORTS_START_END_LIB=(
       $(
-        if [[ -x ${cc}/bin/ld.gold ]]; then echo True; else echo False; fi
+        echo False
       )
     )
     IS_CLANG=(
